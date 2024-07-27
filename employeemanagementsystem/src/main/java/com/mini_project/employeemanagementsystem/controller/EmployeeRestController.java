@@ -3,6 +3,7 @@ package com.mini_project.employeemanagementsystem.controller;
 import com.mini_project.employeemanagementsystem.dto.CreateEmployeeDTO;
 import com.mini_project.employeemanagementsystem.dto.EmployeeDTO;
 import com.mini_project.employeemanagementsystem.service.EmployeeService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +26,7 @@ public class EmployeeRestController {
     }
 
     @PostMapping(value = "/addEmployee")
-    public ResponseEntity<EmployeeDTO> addEmployee(@RequestBody CreateEmployeeDTO employeeDTO){
+    public ResponseEntity<EmployeeDTO> addEmployee(@Valid @RequestBody CreateEmployeeDTO employeeDTO){
         EmployeeDTO savedEmployeeDTO =  employeeService.addEmployee(employeeDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedEmployeeDTO);
     }
@@ -37,7 +38,7 @@ public class EmployeeRestController {
     }
 
     @PutMapping(value = "/updateEmployee")
-    public ResponseEntity<EmployeeDTO> updateEmployee(@RequestBody EmployeeDTO employeeDTO){
+    public ResponseEntity<EmployeeDTO> updateEmployee(@Valid @RequestBody EmployeeDTO employeeDTO){
         EmployeeDTO updatedEmployeeDTO = employeeService.updateEmployee(employeeDTO);
         return ResponseEntity.status(HttpStatus.OK).body(updatedEmployeeDTO);
     }
