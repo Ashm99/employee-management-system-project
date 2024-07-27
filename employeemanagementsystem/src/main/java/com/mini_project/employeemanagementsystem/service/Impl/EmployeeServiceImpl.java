@@ -1,5 +1,6 @@
 package com.mini_project.employeemanagementsystem.service.Impl;
 
+import com.mini_project.employeemanagementsystem.common.exceptions.DataNotFoundException;
 import com.mini_project.employeemanagementsystem.dto.CreateEmployeeDTO;
 import com.mini_project.employeemanagementsystem.dto.EmployeeDTO;
 import com.mini_project.employeemanagementsystem.mapper.EmployeeMapper;
@@ -7,8 +8,6 @@ import com.mini_project.employeemanagementsystem.model.Employee;
 import com.mini_project.employeemanagementsystem.repo.EmployeeRepository;
 import com.mini_project.employeemanagementsystem.service.EmployeeService;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -21,50 +20,52 @@ public class EmployeeServiceImpl implements EmployeeService {
     EmployeeRepository employeeRepository;
 
     @Override
-    public ResponseEntity<List<EmployeeDTO>> getAllEmployees() {
+    public List<EmployeeDTO> getAllEmployees() {
         List<Employee> employeeList = employeeRepository.findAll();
-        if(employeeList.isEmpty()){
-            System.out.println("Database is empty");
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
-        }
         List<EmployeeDTO> employeeDTOList = new ArrayList<>();
         for (Employee employee : employeeList) {
             employeeDTOList.add(EmployeeMapper.mapToEmployeeDTO(employee));
         }
-        return ResponseEntity.status(HttpStatus.OK).body(employeeDTOList);
+        return employeeDTOList;
     }
 
     @Override
-    public ResponseEntity<EmployeeDTO> addEmployee(CreateEmployeeDTO employeeDTO) {
+    public EmployeeDTO addEmployee(CreateEmployeeDTO employeeDTO) {
         Employee employee = employeeRepository.save(EmployeeMapper.mapToEmployeeFromCreateEmployeeDTO(employeeDTO));
-        return ResponseEntity.status(HttpStatus.CREATED).body(EmployeeMapper.mapToEmployeeDTO(employee));
+        return EmployeeMapper.mapToEmployeeDTO(employee);
     }
 
     @Override
-    public ResponseEntity<EmployeeDTO> getEmployeeById(Long id) {
+    public EmployeeDTO getEmployeeById(Long id) {
         Optional<Employee> optionalEmployee = employeeRepository.findById(id);
         if(optionalEmployee.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
+            String message = "Database does not have an employee with ID: " + id +  " to fetch.";
+            System.out.println(message);
+            throw new DataNotFoundException(message);
         }
         EmployeeDTO employeeDTO = EmployeeMapper.mapToEmployeeDTO(optionalEmployee.get());
 
-        return ResponseEntity.status(HttpStatus.OK).body(employeeDTO);
+        return employeeDTO;
     }
 
     @Override
-    public ResponseEntity<Object> updateEmployee(EmployeeDTO employeeDTO) {
+    public EmployeeDTO updateEmployee(EmployeeDTO employeeDTO) {
         Optional<Employee> optionalEmployee = employeeRepository.findById(employeeDTO.getId());
         if(optionalEmployee.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No resource available with given employee ID.");
+            String message = "Database does not have an employee with ID: " + employeeDTO.getId() +  " to update.";
+            System.out.println(message);
+            throw new DataNotFoundException(message);
         }
         Employee employee = employeeRepository.save(EmployeeMapper.mapToEmployee(employeeDTO));
-        return ResponseEntity.status(HttpStatus.OK).body(EmployeeMapper.mapToEmployeeDTO(employee));
+        return EmployeeMapper.mapToEmployeeDTO(employee);
     }
 
     @Override
     public String deleteEmployee(Long id) {
         if(employeeRepository.findById(id).isEmpty()){
-            return "No existing employee found in the given ID";
+            String message = "Database does not have an employee with ID: " + id +  " to delete.";
+            System.out.println(message);
+            throw new DataNotFoundException(message);
         }
         employeeRepository.deleteById(id);
         return "Deleted Employee with ID: " + id;

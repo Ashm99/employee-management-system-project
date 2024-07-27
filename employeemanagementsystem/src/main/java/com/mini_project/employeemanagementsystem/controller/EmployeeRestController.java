@@ -4,6 +4,7 @@ import com.mini_project.employeemanagementsystem.dto.CreateEmployeeDTO;
 import com.mini_project.employeemanagementsystem.dto.EmployeeDTO;
 import com.mini_project.employeemanagementsystem.service.EmployeeService;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,26 +17,33 @@ public class EmployeeRestController {
 
     @GetMapping(value = "/getAll")
     public ResponseEntity<List<EmployeeDTO>> getAllEmployees(){
-        return employeeService.getAllEmployees();
+        List<EmployeeDTO> employeeDTOList =  employeeService.getAllEmployees();
+        if(employeeDTOList.isEmpty()){
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(employeeDTOList);
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(employeeDTOList);
     }
 
     @PostMapping(value = "/addEmployee")
     public ResponseEntity<EmployeeDTO> addEmployee(@RequestBody CreateEmployeeDTO employeeDTO){
-        return employeeService.addEmployee(employeeDTO);
+        EmployeeDTO savedEmployeeDTO =  employeeService.addEmployee(employeeDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedEmployeeDTO);
     }
 
     @GetMapping(value = "/getEmployee/{id}")
     public ResponseEntity<EmployeeDTO> getEmployeeById(@PathVariable(value = "id") Long id){
-        return employeeService.getEmployeeById(id);
+        EmployeeDTO employeeDTO = employeeService.getEmployeeById(id);
+        return ResponseEntity.status(HttpStatus.OK).body(employeeDTO);
     }
 
     @PutMapping(value = "/updateEmployee")
-    public ResponseEntity<Object> updateEmployee(@RequestBody EmployeeDTO employeeDTO){
-        return employeeService.updateEmployee(employeeDTO);
+    public ResponseEntity<EmployeeDTO> updateEmployee(@RequestBody EmployeeDTO employeeDTO){
+        EmployeeDTO updatedEmployeeDTO = employeeService.updateEmployee(employeeDTO);
+        return ResponseEntity.status(HttpStatus.OK).body(updatedEmployeeDTO);
     }
 
     @DeleteMapping(value = "/delete/{id}")
-    public String deleteEmployee(@PathVariable(value = "id") Long id){
-        return employeeService.deleteEmployee(id);
+    public ResponseEntity<String> deleteEmployee(@PathVariable(value = "id") Long id){
+        return ResponseEntity.status(HttpStatus.OK).body(employeeService.deleteEmployee(id));
     }
 }
