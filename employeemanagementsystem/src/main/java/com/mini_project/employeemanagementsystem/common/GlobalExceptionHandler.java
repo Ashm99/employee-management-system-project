@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,6 +25,11 @@ public class GlobalExceptionHandler {
         );
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
     }
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<String> handleTypeMismatchException(MethodArgumentTypeMismatchException ex) {
+        String error = String.format("The parameter '%s' should be of type '%s'.", ex.getName(), ex.getRequiredType().getSimpleName());
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
 
     @ExceptionHandler(DataNotFoundException.class)
     public ResponseEntity<String> handleDataNotFoundException(DataNotFoundException dataNotFoundException) throws InterruptedException {
@@ -31,6 +37,8 @@ public class GlobalExceptionHandler {
         System.out.print("Stack trace:");
         Thread.sleep(1000);
         dataNotFoundException.printStackTrace();
+        Thread.sleep(1000);
+        System.out.println("Stack trace printed | Resuming application.");
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(dataNotFoundException.getMessage());
     }
 
@@ -40,6 +48,8 @@ public class GlobalExceptionHandler {
         System.err.print("Stack trace:");
         Thread.sleep(1000);
         e.printStackTrace();
+        Thread.sleep(1000);
+        System.out.println("Stack trace printed | Resuming application.");
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
     }
 }
