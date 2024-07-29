@@ -50,6 +50,6 @@ public class GlobalExceptionHandler {
         e.printStackTrace();
         Thread.sleep(1000);
         System.out.println("Stack trace printed | Resuming application.");
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
     }
 }
