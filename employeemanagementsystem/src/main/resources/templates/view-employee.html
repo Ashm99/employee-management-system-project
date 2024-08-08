@@ -1,10 +1,20 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>index.html</title>
+    <title>Employee | View</title>
 </head>
 <body>
-
+    <header>
+        <h3>Employee data</h3>
+    </header>
+    <section>
+        <div>
+            <p><strong>First Name: </strong><span th:text="${employee.firstName}">First name</span></p>
+            <p><strong>Last Name: </strong><span th:text="${employee.lastName}">Last name</span></p>
+            <p><strong>Email: </strong><span th:text="${employee.email}">Email</span></p>
+            <p><strong>ID: </strong><span th:text="${employee.id}">ID</span></p>
+        </div>
+    </section>
 </body>
 </html>
