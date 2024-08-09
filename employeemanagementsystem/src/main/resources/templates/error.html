@@ -1,10 +1,19 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>index.html</title>
+    <title>Success</title>
 </head>
 <body>
+    <header>
+        <h3>Error!</h3>
+    </header>
 
+    <section>
+        <p th:text="${message}">Performed action was interrupted due to error.</p>
+    </section>
+    
+    <br><br>
+    <div th:replace="~{common/footer::footer}">End of page</div>
 </body>
 </html>

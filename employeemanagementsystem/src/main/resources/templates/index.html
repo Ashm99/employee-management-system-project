@@ -23,7 +23,7 @@
         >
           Add user
         </button>
-        Finish this add user functionality.
+        
       </div>
 
       <div th:if="${isEmpty}">
@@ -57,7 +57,7 @@
                                     </button>
                                 </span>
                                 <span>
-                                    <button class="btn btn-danger" th:onclick="|window.location.href='@{/api/employees/add-employee}'|">
+                                    <button class="btn btn-danger" th:onclick="|window.location.href='@{'/api/employees/delete/' + ${employee.id}}'|">
                                         Delete
                                     </button>
                                 </span>

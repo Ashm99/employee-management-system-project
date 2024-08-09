@@ -1,7 +1,7 @@
 package com.mini_project.employeemanagementsystem.dto;
 
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,13 +11,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 public class CreateEmployeeDTO {
-    @NotEmpty(message = "First Name cannot be empty")
+    @NotBlank(message = "First Name cannot be blank")
     private String firstName;
 
-    @NotEmpty(message = "Last Name cannot be empty")
+    @NotBlank(message = "Last Name cannot be blank")
     private String lastName;
 
-    @NotEmpty(message = "Email cannot be empty")
+    @NotBlank(message = "Email cannot be blank")
     @Email
     private String email;
 }
