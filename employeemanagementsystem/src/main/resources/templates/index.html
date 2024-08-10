@@ -44,7 +44,6 @@
                         </tr>
                     </thead>
                     <tbody>
-                        Finish linking these buttons appropriately.
                         <tr th:each="employee, iterStat :${employeeList}">
                             <td th:text="${iterStat.count}">1</td>
                             <td th:text="${employee.firstName}">Employee first name</td>
@@ -52,7 +51,7 @@
                             <td th:text="${employee.email}">Employee email</td>
                             <td>
                                 <span>
-                                    <button class="btn btn-primary" th:onclick="|window.location.href='@{/api/employees/add-employee}'|">
+                                    <button class="btn btn-primary" th:onclick="|window.location.href='@{'/api/employees/update-employee/' + ${employee.id}}'|">
                                         Update
                                     </button>
                                 </span>

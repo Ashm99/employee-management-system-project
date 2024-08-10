@@ -3,6 +3,7 @@ package com.mini_project.employeemanagementsystem.controller;
 import com.mini_project.employeemanagementsystem.common.exceptions.DataNotFoundException;
 import com.mini_project.employeemanagementsystem.dto.CreateEmployeeDTO;
 import com.mini_project.employeemanagementsystem.dto.EmployeeDTO;
+import com.mini_project.employeemanagementsystem.mapper.EmployeeMapper;
 import com.mini_project.employeemanagementsystem.service.EmployeeService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -60,12 +61,11 @@ public class WebController {
      * @return add-employee html page
      */
     @GetMapping(value="/add-employee")
-    public String getEmployee(Model model){
+    public String addEmployee(Model model){
         model.addAttribute("employee", new CreateEmployeeDTO());
         return "add-employee";
     }
 
-    // http://localhost:8081/api/employees/add
     /**
      * Gets a new employee object and saves into the repository.
      * Loads the success or error page based on the outcome.
@@ -74,7 +74,7 @@ public class WebController {
      * @return success or error page
      */
     @PostMapping(value = "/add")
-    public String addEmployee(Model model, @Valid @ModelAttribute CreateEmployeeDTO newEmployee){
+    public String saveEmployee(Model model, @Valid @ModelAttribute CreateEmployeeDTO newEmployee){
         EmployeeDTO savedEmployee = employeeService.addEmployee(newEmployee);
         if(savedEmployee.getFirstName() == newEmployee.getFirstName() &&
                 savedEmployee.getLastName() == newEmployee.getLastName() &&
@@ -111,6 +111,48 @@ public class WebController {
             System.err.println(e.getMessage());
         }
         model.addAttribute("message", "Error deleting the employee." );
+        return "error";
+    }
+
+    // http://localhost:8081/api/employees/update/{id}
+
+    /**
+     * Updates the employee object upon clicking update from the webpage.
+     * This method actually renders the webpage for the updation process.
+     * @param id
+     * @param model
+     * @return a success or an error page based on the outcome.
+     */
+    @GetMapping(value = "/update-employee/{id}")
+    public String updateEmployee(@PathVariable(value = "id") Long id, Model model){
+        EmployeeDTO employee = employeeService.getEmployeeById(id);
+        model.addAttribute("employee", employee);
+        return "update-employee";
+    }
+
+    /**
+     * Updates the selected employee object with the values filled from the webpage.
+     * Loads the success or error page based on the updation process.
+     * @param model
+     * @param newEmployee
+     * @return success or error page
+     */
+    @PostMapping(value = "/update/{id}")
+    public String saveUpdatedEmployee(@PathVariable(value = "id") Long id, Model model, @Valid @ModelAttribute CreateEmployeeDTO newEmployee){
+        EmployeeDTO updatedEmployee = EmployeeMapper.mapToEmployeeDTOFromCreateEmployeeDTO(newEmployee);
+        updatedEmployee.setId(id);
+
+        EmployeeDTO savedEmployee = employeeService.updateEmployee(updatedEmployee);
+
+        if(savedEmployee.getFirstName() == newEmployee.getFirstName() &&
+                savedEmployee.getLastName() == newEmployee.getLastName() &&
+                savedEmployee.getEmail() == newEmployee.getEmail()
+        ){
+            model.addAttribute("message", "Employee updated with employee ID: " + savedEmployee.getId() + "." );
+            return "success";
+        }
+
+        model.addAttribute("message", "Error updating new employee" );
         return "error";
     }
 }

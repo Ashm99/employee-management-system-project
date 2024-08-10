@@ -27,4 +27,12 @@ public class EmployeeMapper {
                 employeeDTO.getEmail()
         );
     }
+
+    public static EmployeeDTO mapToEmployeeDTOFromCreateEmployeeDTO(CreateEmployeeDTO employeeDTO){
+        return new EmployeeDTO(null,
+                employeeDTO.getFirstName(),
+                employeeDTO.getLastName(),
+                employeeDTO.getEmail()
+        );
+    }
 }
