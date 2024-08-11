@@ -10,13 +10,13 @@
       crossorigin="anonymous"
     />
 </head>
-<body>
+<body class="m-3">
     <header>
-        <h3>Fill and click add to add a new employee</h3>
+        <h4 class="text-success">Fill and click add to add a new employee</h4>
     </header>
 
     <section>
-        <div class="container">
+        <div class="container-fluid">
             <form action="#" th:action="@{/api/employees/add}" th:object="${employee}" method="post">
                 <label for="first-name">First Name:</label>
                 <input type="text" id="first-name" placeholder="eg. John" th:field="*{firstName}" required>
@@ -27,12 +27,12 @@
                 <label for="email">Email:</label>
                 <input type="email" id="email" placeholder="eg. jdoe@abc.com" th:field="*{email}" required>
                 <br><br>
-                <input type="submit" value="Add">
+                <input class="btn btn-success" type="submit" value="Add">
             </form>
         </div>
     </section>
 
-    <br><br>
+    <br>
     <div th:replace="~{common/footer::footer}">End of page.</div>
 </body>
 </html>

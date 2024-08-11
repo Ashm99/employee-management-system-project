@@ -1,5 +1,6 @@
 package com.mini_project.employeemanagementsystem.controller;
 
+import com.mini_project.employeemanagementsystem.common.exceptions.DataAdditionException;
 import com.mini_project.employeemanagementsystem.common.exceptions.DataNotFoundException;
 import com.mini_project.employeemanagementsystem.dto.CreateEmployeeDTO;
 import com.mini_project.employeemanagementsystem.dto.EmployeeDTO;
@@ -75,17 +76,16 @@ public class WebController {
      */
     @PostMapping(value = "/add")
     public String saveEmployee(Model model, @Valid @ModelAttribute CreateEmployeeDTO newEmployee){
-        EmployeeDTO savedEmployee = employeeService.addEmployee(newEmployee);
-        if(savedEmployee.getFirstName() == newEmployee.getFirstName() &&
-                savedEmployee.getLastName() == newEmployee.getLastName() &&
-                savedEmployee.getEmail() == newEmployee.getEmail()
-        ){
-            model.addAttribute("message", "Employee added with employee ID: " + savedEmployee.getId() + "." );
-            return "success";
+        EmployeeDTO savedEmployee;
+        try{
+            savedEmployee = employeeService.addEmployee(newEmployee);
         }
-
-        model.addAttribute("message", "Error creating new employee" );
-        return "error";
+        catch(DataAdditionException exception){
+            model.addAttribute("message", "Error while adding new employee." );
+            return "error";
+        }
+        model.addAttribute("message", "Employee added with employee ID: " + savedEmployee.getId() + "." );
+        return "success";
     }
 
     // http://localhost:8081/api/employees/delete/{id}
@@ -141,18 +141,15 @@ public class WebController {
     public String saveUpdatedEmployee(@PathVariable(value = "id") Long id, Model model, @Valid @ModelAttribute CreateEmployeeDTO newEmployee){
         EmployeeDTO updatedEmployee = EmployeeMapper.mapToEmployeeDTOFromCreateEmployeeDTO(newEmployee);
         updatedEmployee.setId(id);
-
-        EmployeeDTO savedEmployee = employeeService.updateEmployee(updatedEmployee);
-
-        if(savedEmployee.getFirstName() == newEmployee.getFirstName() &&
-                savedEmployee.getLastName() == newEmployee.getLastName() &&
-                savedEmployee.getEmail() == newEmployee.getEmail()
-        ){
-            model.addAttribute("message", "Employee updated with employee ID: " + savedEmployee.getId() + "." );
-            return "success";
+        EmployeeDTO savedEmployee;
+        try{
+            savedEmployee = employeeService.updateEmployee(updatedEmployee);
         }
-
-        model.addAttribute("message", "Error updating new employee" );
-        return "error";
+        catch(DataAdditionException dataAdditionException){
+            model.addAttribute("message", "Error while updating the employee" );
+            return "error";
+        }
+        model.addAttribute("message", "Employee updated with employee ID: " + id + "." );
+        return "success";
     }
 }

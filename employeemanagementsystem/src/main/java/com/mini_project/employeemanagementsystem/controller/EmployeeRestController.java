@@ -22,7 +22,7 @@ public class EmployeeRestController {
         if(employeeDTOList.isEmpty()){
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(employeeDTOList);
         }
-        return ResponseEntity.status(HttpStatus.OK).body(employeeDTOList);
+        return new ResponseEntity<>(employeeDTOList, HttpStatus.OK);
     }
 
     @PostMapping(value = "/addEmployee")

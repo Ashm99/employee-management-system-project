@@ -11,14 +11,14 @@
       crossorigin="anonymous"
     />
   </head>
-  <body>
+  <body class="m-3">
     <header>
-      <h3>Employee list - index</h3>
+      <h4><strong>Employees list | Home</strong></h4>
     </header>
 
     <section>
       <div class="add-user">
-        <button class="btn btn-primary"
+        <button class="btn btn-success mb-3"
           th:onclick="|window.location.href='@{/api/employees/add-employee}'|"
         >
           Add user
@@ -51,17 +51,17 @@
                             <td th:text="${employee.email}">Employee email</td>
                             <td>
                                 <span>
-                                    <button class="btn btn-primary" th:onclick="|window.location.href='@{'/api/employees/update-employee/' + ${employee.id}}'|">
+                                    <button class="btn btn-primary btn-sm" th:onclick="|window.location.href='@{/api/employees/update-employee/{id}(id=${employee.id})}'|">
                                         Update
                                     </button>
                                 </span>
                                 <span>
-                                    <button class="btn btn-danger" th:onclick="|window.location.href='@{'/api/employees/delete/' + ${employee.id}}'|">
+                                    <button class="btn btn-danger btn-sm" th:onclick="|window.location.href='@{/api/employees/delete/{id}(id=${employee.id})}'|">
                                         Delete
                                     </button>
                                 </span>
                                 <span>
-                                    <button class="btn btn-primary" th:onclick="|window.location.href='@{'/api/employees/view/' + ${employee.id}}'|">
+                                    <button class="btn btn-info btn-sm" th:onclick="|window.location.href='@{/api/employees/view/{id}(id=${employee.id})}'|">
                                         View
                                     </button>    
                                 </span>
@@ -73,15 +73,9 @@
         </div>
       </div>
     </section>
-
-    <section>
-      <div class="message">
-        <h4 th:text="${message}">
-          This will be printed if thymeleaf expression fails to load.
-        </h4>
-      </div>
-    </section>
-
-    <footer></footer>
+    <br>
+    <footer>
+      <p>End of Page.</p>
+    </footer>
   </body>
 </html>

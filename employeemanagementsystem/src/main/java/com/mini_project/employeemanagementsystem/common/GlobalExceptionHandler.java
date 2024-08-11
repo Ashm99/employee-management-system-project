@@ -1,5 +1,6 @@
 package com.mini_project.employeemanagementsystem.common;
 
+import com.mini_project.employeemanagementsystem.common.exceptions.DataAdditionException;
 import com.mini_project.employeemanagementsystem.common.exceptions.DataNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -41,10 +42,20 @@ public class GlobalExceptionHandler {
         System.out.println("Stack trace printed | Resuming application.");
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(dataNotFoundException.getMessage());
     }
+    @ExceptionHandler(DataAdditionException.class)
+    public ResponseEntity<String> handleDataAdditionException(DataAdditionException dataAdditionException) throws InterruptedException {
+        System.out.println("Oops! There's an issue while adding the new Employee.");
+        System.out.print("Stack trace:");
+        Thread.sleep(1000);
+        dataAdditionException.printStackTrace();
+        Thread.sleep(1000);
+        System.out.println("Stack trace printed | Resuming application.");
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(dataAdditionException.getMessage());
+    }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handleException(Exception e) throws InterruptedException {
-        System.err.println("Oops! An error occured.");
+        System.err.println("Oops! An error occured. Check stack trace below for further information.");
         System.err.print("Stack trace:");
         Thread.sleep(1000);
         e.printStackTrace();
