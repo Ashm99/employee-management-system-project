@@ -16,6 +16,10 @@ import java.util.List;
 public class EmployeeRestController {
     private EmployeeService employeeService;
 
+    /**
+     * A RESTful method to get all the employees from the database
+     * @return a list of EmployeeDTOs
+     */
     @GetMapping(value = "/getAll")
     public ResponseEntity<List<EmployeeDTO>> getAllEmployees(){
         List<EmployeeDTO> employeeDTOList =  employeeService.getAllEmployees();
@@ -25,24 +29,40 @@ public class EmployeeRestController {
         return new ResponseEntity<>(employeeDTOList, HttpStatus.OK);
     }
 
+    /**
+     * A RESTful method to add a new employee into the database
+     * @return the added employee as an EmployeeDTO object
+     */
     @PostMapping(value = "/addEmployee")
     public ResponseEntity<EmployeeDTO> addEmployee(@Valid @RequestBody CreateEmployeeDTO employeeDTO){
         EmployeeDTO savedEmployeeDTO =  employeeService.addEmployee(employeeDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedEmployeeDTO);
     }
 
+    /**
+     * A RESTful method to get an employee from the database through its id
+     * @return the Employee as a DTO object if found or throws DataNotFoundException
+     */
     @GetMapping(value = "/getEmployee/{id}")
     public ResponseEntity<EmployeeDTO> getEmployeeById(@PathVariable(value = "id") Long id){
         EmployeeDTO employeeDTO = employeeService.getEmployeeById(id);
         return ResponseEntity.status(HttpStatus.OK).body(employeeDTO);
     }
 
+    /**
+     * A RESTful method to update an employee in the database
+     * @return the updated employee as an EmployeeDTO object
+     */
     @PutMapping(value = "/updateEmployee")
     public ResponseEntity<EmployeeDTO> updateEmployee(@Valid @RequestBody EmployeeDTO employeeDTO){
         EmployeeDTO updatedEmployeeDTO = employeeService.updateEmployee(employeeDTO);
         return ResponseEntity.status(HttpStatus.OK).body(updatedEmployeeDTO);
     }
 
+    /**
+     * A RESTful method to delete an employee from the database
+     * @return a message string based on the outcome.
+     */
     @DeleteMapping(value = "/delete/{id}")
     public ResponseEntity<String> deleteEmployee(@PathVariable(value = "id") Long id){
         return ResponseEntity.status(HttpStatus.OK).body(employeeService.deleteEmployee(id));
