@@ -34,6 +34,8 @@ WORKDIR /app
 # Copy the JAR file from the builder stage
 COPY --from=builder /app/target/*.jar app.jar
 
+COPY src/main/resources/ssl/tidb-truststore.jks tidb-truststore.jks
+
 EXPOSE 8080
 
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-Djavax.net.ssl.trustStore=tidb-truststore.jks", "-Djavax.net.ssl.trustStorePassword=changeit", "-jar", "app.jar"]
